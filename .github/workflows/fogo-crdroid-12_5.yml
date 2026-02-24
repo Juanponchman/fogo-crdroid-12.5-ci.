@@ -30,7 +30,7 @@ jobs:
       - name: Init crDroid 12.5 source
         run: |
           mkdir -p ~/crdroid && cd ~/crdroid
-          # 12.5 is on the Android 16 base per crDroid’s blog
+          # 12.5 is on Android 16 base; adjust branch if crDroid changes it
           repo init -u https://github.com/crdroidandroid/android.git -b 16.0
           mkdir -p .repo/local_manifests
           cp $GITHUB_WORKSPACE/.github/local_manifests/*.xml .repo/local_manifests/ || true
@@ -40,7 +40,8 @@ jobs:
         run: |
           cd ~/crdroid
           source build/envsetup.sh
-          # TEMP value – we’ll fix it once you give me PRODUCT_NAME
+          # TODO: change this to the real combo from android_device_motorola_fogo
+          # e.g. crdroid_fogo-userdebug or lineage_fogo-userdebug
           lunch crdroid_fogo-user
           m bootimage vendorbootimage dtboimage -j$(nproc)
 
