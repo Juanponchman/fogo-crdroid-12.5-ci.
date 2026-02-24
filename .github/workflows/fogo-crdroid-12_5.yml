@@ -1,4 +1,4 @@
-name: fogo-crdroid-12_5-images
+name: fogo-crdroid-12_5-complete
 
 on:
   workflow_dispatch:
@@ -30,31 +30,31 @@ jobs:
       - name: Init crDroid 12.5 source
         run: |
           mkdir -p ~/crdroid && cd ~/crdroid
-          # 12.5 is on Android 16 base; adjust branch if crDroid changes it
           repo init -u https://github.com/crdroidandroid/android.git -b 16.0
           mkdir -p .repo/local_manifests
           cp $GITHUB_WORKSPACE/.github/local_manifests/*.xml .repo/local_manifests/ || true
           repo sync -c --force-sync --no-tags --no-clone-bundle --optimized-fetch --prune -j$(nproc)
 
-      - name: Build fogo 12.5 images
+      - name: Build fogo 12.5 ROM + images
         run: |
           cd ~/crdroid
           source build/envsetup.sh
-          # TODO: change this to the real combo from android_device_motorola_fogo
-          # e.g. crdroid_fogo-userdebug or lineage_fogo-userdebug
           lunch lineage_fogo-userdebug
-          m bootimage vendorbootimage dtboimage -j$(nproc)
+          m bacon -j$(nproc)
 
-      - name: Collect images
+      - name: Collect ALL files for ADB update
         run: |
           cd ~/crdroid
           mkdir -p $GITHUB_WORKSPACE/artifacts
+          # Recovery images (flash first via fastboot)
           cp out/target/product/fogo/boot.img $GITHUB_WORKSPACE/artifacts/ || true
           cp out/target/product/fogo/vendor_boot.img $GITHUB_WORKSPACE/artifacts/ || true
           cp out/target/product/fogo/dtbo.img $GITHUB_WORKSPACE/artifacts/ || true
+          # Update package (flash via ADB sideload)
+          cp out/target/product/fogo/*.zip $GITHUB_WORKSPACE/artifacts/ || true
 
-      - name: Upload fogo 12.5 images
+      - name: Upload complete build
         uses: actions/upload-artifact@v4
         with:
-          name: fogo-12_5-recovery
+          name: fogo-12_5-complete
           path: artifacts/
