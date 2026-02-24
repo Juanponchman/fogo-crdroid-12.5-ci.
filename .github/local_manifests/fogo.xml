@@ -3,7 +3,7 @@
            path="device/motorola/fogo"
            remote="github" />
 
-  <project name="Juanponchman/android_vendor_motorola_fogo"
+  <project name="Juanponchman/proprietary_vendor_motorola_fogo"
            path="vendor/motorola/fogo"
            remote="github" />
 
