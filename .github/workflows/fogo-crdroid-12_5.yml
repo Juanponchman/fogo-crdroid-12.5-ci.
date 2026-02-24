@@ -42,7 +42,7 @@ jobs:
           source build/envsetup.sh
           # TODO: change this to the real combo from android_device_motorola_fogo
           # e.g. crdroid_fogo-userdebug or lineage_fogo-userdebug
-          lunch crdroid_fogo-user
+          lunch lineage_fogo-userdebug
           m bootimage vendorbootimage dtboimage -j$(nproc)
 
       - name: Collect images
